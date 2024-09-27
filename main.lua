@@ -106,10 +106,10 @@ parse_windows = function(data)
 
             for _, cmd in ipairs(steps) do
                 table.insert(output, {
-                    'send-keys',
-                    string.format('%q', '  ' .. cmd),
-                    ternary(props.norun == true, '', 'C-m')
-                })
+                        'send-keys',
+                        string.format('%q', '  ' .. cmd),
+                        ternary(props.norun == true, '', 'C-m')
+                    })
             end
 
 
@@ -167,12 +167,13 @@ windows = parse_windows(data.windows)
 print()
 for _, v in pairs(env) do
     -- print("v: " .. dump(v))
-    print(concat_array(v))
+    -- print(concat_array(v))
+    print(table.concat(v, ' '))
 end
 
 print()
-for k,v in pairs(data.database) do
-  print(k .. ": " .. v)
+for _, v in pairs(windows) do
+    print(table.concat(v, ' '))
 end
 
 
