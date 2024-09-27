@@ -44,6 +44,16 @@ function whitespace(length)
     return table.concat(t)
 end
 
+function err(str)
+    io.write('\27[31mERR:\27[0m ')
+    io.write(str)
+    io.write('\n')
+
+--     io.write('\27[31m')
+--     io.write(str)
+--     io.write('\27[0m\n')
+end
+
 
 local yaml = require('lyaml')
 local file = io.open("config.yaml", "r")
@@ -61,9 +71,9 @@ local parse_env = function(data)
         -- print(index .. ": " .. env.name)
 
         if env.name == nil then
-            print('You must specify a name for env, ignoring')
+            err('You must specify a name for env, ignoring')
         elseif env.value ~= nil and env.default ~= nil then
-            print('Cannot specify value and default at the same time, ignoring')
+            err('Cannot specify value and default at the same time, ignoring')
         else
             local val
             if env.value ~= nil then
@@ -124,7 +134,7 @@ parse_windows = function(data)
         elseif props.split ~= nil then
             if props.split.upperside == nil and props.split.lowerside == nil and
                 props.split.leftside == nil and props.split.rightside == nil then
-                print('err')
+                err('err')
             else
                 -- Detect split direction
                 local first_side, second_side, split_command
@@ -161,7 +171,7 @@ parse_windows = function(data)
 
         -- Err
         else
-            print('Unrecognized window structure, ignoring')
+            err('Unrecognized window structure, ignoring')
         end
     end
 
@@ -178,10 +188,16 @@ main = function()
     -- print("      >> windows: " .. dump(windows))
     -- print("      >> cmds:    " .. dump(cmds))
 
-    print('tmux \\')
+    print('\ntmux \\')
     for i, cmd in ipairs(cmds) do
         cmds[i] = table.concat(cmd, ' ') .. ' \\;'
-        print('  ' .. cmds[i] .. whitespace(60 - #cmds[i]) .. ' \\')
+
+        io.write('  ' .. cmds[i] .. whitespace(60 - #cmds[i]))
+        if i ~= #cmds then
+            io.write('\\\n')
+        else
+            io.write('\n')
+        end
     end
 
     io.write('\n\nrun command? (yes / no): ')
