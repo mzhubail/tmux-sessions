@@ -114,44 +114,42 @@ parse_windows = function(data)
 
 
         -- Split screen case
-        elseif props.vertical_split ~= nil or props.horizontal_split ~= nil then
-            -- print("split: " .. dump(props))
-
-            if props.vertical_split ~= nil then
-                local rightside = props.vertical_split.rightside
-                local leftside = props.vertical_split.leftside
-
-                if rightside == nil or leftside == nil then
-                    print('err')
-                else
-                    -- parse_windows({ rightside, leftside })
-
-                    -- table_concat(
-
-                    local left = parse_windows({ leftside })
-                    local right = parse_windows({ rightside })
-                    -- print("left: " .. dump(left))
-
-                    -- print("before: " .. dump(output))
-                    table_concat(
-                        output,
-                        {
-                            unpack(left),
-                            { 'splitw', '-h' },
-                            unpack(right)
-                        }
-                    )
-                    -- print("after: " .. dump(output))
-                end
+        elseif props.split ~= nil then
+            if props.split.upperside == nil and props.split.lowerside == nil and
+                props.split.leftside == nil and props.split.rightside == nil then
+                print('err')
             else
-                local upperside = props.horizontal_split.upperside
-                local lowerside = props.horizontal_split.lowerside
-
-                if upperside == nil or lowerside == nil then
-                    print('err')
-                else
-                    parse_windows({ upperside, lowerside })
+                -- Detect split direction
+                local first_side, second_side, split_command
+                if props.split.upperside ~= nil and props.split.lowerside ~= nil then
+                    first_side  = props.split.upperside
+                    second_side = props.split.lowerside
+                    split_command = { 'split-window', '-v' }
+                elseif props.split.leftside ~= nil and props.split.rightside ~= nil then
+                    first_side  = props.split.leftside
+                    second_side = props.split.rightside
+                    split_command = { 'split-window', '-h' }
                 end
+
+
+                -- print("split: " .. dump(props))
+
+                -- parse_windows({ rightside, leftside })
+
+                local first_cmds  = parse_windows({ first_side })
+                local second_cmds = parse_windows({ second_side })
+                -- print("left: " .. dump(left))
+
+                -- print("before: " .. dump(output))
+                table_concat(
+                    output,
+                    {
+                        unpack(first_cmds),
+                        split_command,
+                        unpack(second_cmds)
+                    }
+                    )
+                -- print("after: " .. dump(output))
             end
 
         -- Err
