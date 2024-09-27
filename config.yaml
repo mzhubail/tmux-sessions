@@ -15,11 +15,11 @@ windows:
     working_directory: ../angularui
   - cmd: helm upgrade --force mzh .
     norun: true
-  - vertical_split:
+  - split:
       leftside:
         cmd: echo hi
         norun: true
       rightside:
         cmd: echo hello
-        norun: true
+        working_directory: '~'
 

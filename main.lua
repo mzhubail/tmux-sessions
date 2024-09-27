@@ -36,6 +36,13 @@ function table_concat(t1, t2)
     return t1
 end
 
+function whitespace(length) 
+    local t = {}
+    for _ = 1, length do
+        t[#t + 1] = ' '
+    end
+    return table.concat(t)
+end
 
 
 local yaml = require('lyaml')
@@ -71,7 +78,7 @@ local parse_env = function(data)
             -- print(dump(env))
             -- print(env.name .. " " .. val)
 
-            output[env.name] = {'setenv', env.name, val}
+            output[index] = {'setenv', env.name, val}
         end
     end
 
@@ -161,20 +168,38 @@ parse_windows = function(data)
     return output
 end
 
-env = parse_env(data.env)
-windows = parse_windows(data.windows)
+main = function()
+    local env       = parse_env(data.env)
+    local windows   = parse_windows(data.windows)
+    local cmds      = { unpack(env) }
+    table_concat(cmds, windows)
 
-print()
-for _, v in pairs(env) do
-    -- print("v: " .. dump(v))
-    -- print(concat_array(v))
-    print(table.concat(v, ' '))
+    -- print("      >> env:     " .. dump(env))
+    -- print("      >> windows: " .. dump(windows))
+    -- print("      >> cmds:    " .. dump(cmds))
+
+    print('tmux \\')
+    for i, cmd in ipairs(cmds) do
+        cmds[i] = table.concat(cmd, ' ') .. ' \\;'
+        print('  ' .. cmds[i] .. whitespace(60 - #cmds[i]) .. ' \\')
+    end
+
+    io.write('\n\nrun command? (yes / no): ')
+    local input = io.read()
+    -- print(input)
+
+    if input ~= 'yes' and input ~= 'y' then
+        return
+    end
+
+    -- for i, cmd in ipairs(cmds)
+
+    os.execute(table.concat(
+        { 'tmux ', unpack(cmds) },
+        ' '
+    ))
 end
 
-print()
-for _, v in pairs(windows) do
-    print(table.concat(v, ' '))
-end
-
+main()
 
 
