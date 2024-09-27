@@ -29,6 +29,14 @@ function ternary(predicate, a, b)
     if predicate then return a else return b end
 end
 
+function table_concat(t1, t2)
+    for i=1, #t2 do
+        t1[#t1 + 1] = t2[i]
+    end
+    return t1
+end
+
+
 
 local yaml = require('lyaml')
 local file = io.open("config.yaml", "r")
@@ -116,7 +124,24 @@ parse_windows = function(data)
                 if rightside == nil or leftside == nil then
                     print('err')
                 else
-                    parse_windows({ rightside, leftside })
+                    -- parse_windows({ rightside, leftside })
+
+                    -- table_concat(
+
+                    local left = parse_windows({ leftside })
+                    local right = parse_windows({ rightside })
+                    -- print("left: " .. dump(left))
+
+                    -- print("before: " .. dump(output))
+                    table_concat(
+                        output,
+                        {
+                            unpack(left),
+                            { 'splitw', '-h' },
+                            unpack(right)
+                        }
+                    )
+                    -- print("after: " .. dump(output))
                 end
             else
                 local upperside = props.horizontal_split.upperside
