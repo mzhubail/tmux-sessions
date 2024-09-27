@@ -56,7 +56,7 @@ end
 
 
 local yaml = require('lyaml')
-local file = io.open("config.yaml", "r")
+local file = io.open("sample.yaml", "r")
 local content = file:read("*all")
 file:close()
 
@@ -218,4 +218,10 @@ end
 
 main()
 
+-- print()
+-- for k,v in pairs(data.database) do
+--     print(k .. ": " .. v)
+-- end
 
+
+-- print(if true then "a" else "b" end)
