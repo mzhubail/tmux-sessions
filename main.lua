@@ -68,8 +68,52 @@ local parse_env = function(data)
     return output
 end
 
-env = parse_env(data.env)
 
+parse_windows = function(data)
+    output = {}
+
+    for index, props in pairs(data) do
+        -- Base case
+        if props.cmd ~= nil then
+            print("cmd: " .. props.cmd)
+
+        -- Split screen case
+        elseif props.vertical_split ~= nil or props.horizontal_split ~= nil then
+            -- print("split: " .. dump(props))
+
+            if props.vertical_split ~= nil then
+                local rightside = props.vertical_split.rightside
+                local leftside = props.vertical_split.leftside
+
+                if rightside == nil or leftside == nil then
+                    print('err')
+                else
+                    parse_windows({ rightside, leftside })
+                end
+            else
+                local upperside = props.horizontal_split.upperside
+                local lowerside = props.horizontal_split.lowerside
+
+                if upperside == nil or lowerside == nil then
+                    print('err')
+                else
+                    parse_windows({ upperside, lowerside })
+                end
+            end
+
+        -- Err
+        else
+            print('Unrecognized window structure, ignoring')
+        end
+    end
+
+    return output
+end
+
+env = parse_env(data.env)
+windows = parse_windows(data.windows)
+
+print()
 for _, v in pairs(env) do
     -- print("v: " .. dump(v))
     print(concat_array(v))
