@@ -25,6 +25,9 @@ function concat_array(array)
     return out
 end
 
+function ternary(predicate, a, b)
+    if predicate then return a else return b end
+end
 
 
 local yaml = require('lyaml')
@@ -70,12 +73,37 @@ end
 
 
 parse_windows = function(data)
-    output = {}
+    local output = {}
 
     for index, props in pairs(data) do
+        if index ~= 1 then
+            -- print(dump(output))
+            -- print(dump(props))
+            table.insert(output, { 'new-window' })
+        end
+
         -- Base case
         if props.cmd ~= nil then
-            print("cmd: " .. props.cmd)
+            -- print("cmd: " .. props.cmd)
+            local steps
+
+            if props.working_directory ~= nil then
+                steps = { "cd " .. props.working_directory }
+            else
+                steps = {}
+            end
+
+            -- steps[#steps + 1] = props.cmd
+            table.insert(steps, props.cmd)
+
+            for _, cmd in ipairs(steps) do
+                table.insert(output, {
+                    'send-keys',
+                    string.format('%q', '  ' .. cmd),
+                    ternary(props.norun == true, '', 'C-m')
+                })
+            end
+
 
         -- Split screen case
         elseif props.vertical_split ~= nil or props.horizontal_split ~= nil then
