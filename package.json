@@ -9,6 +9,10 @@
   "keywords": [],
   "author": "mzhubail",
   "dependencies": {
-    "tsx": "^4.19.2"
+    "tsx": "^4.19.2",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1"
   }
 }
