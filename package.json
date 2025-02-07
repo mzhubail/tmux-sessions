@@ -1,0 +1,14 @@
+{
+  "name": "tmux-sessions",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "main": "tsx ./index.ts"
+  },
+  "keywords": [],
+  "author": "mzhubail",
+  "dependencies": {
+    "tsx": "^4.19.2"
+  }
+}
