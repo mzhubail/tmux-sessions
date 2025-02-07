@@ -1,4 +1,4 @@
-import { configSechma } from "config-schema";
+import { configSechma } from "~/config-schema";
 import { writeFileSync } from "fs";
 import { zodToJsonSchema } from "zod-to-json-schema";
 

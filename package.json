@@ -5,7 +5,7 @@
   "description": "",
   "scripts": {
     "main": "tsx ./index.ts",
-    "schema": "tsx ./generate-schema.ts"
+    "schema": "tsx ./src/generate-schema.ts"
   },
   "keywords": [],
   "author": "mzhubail",
