@@ -11,14 +11,13 @@ const envSchema = z.union([
   }),
 ]);
 
-const baseWindowDefinition = z.object({
+const baseWindowDefinition = z.strictObject({
   cmd: z.string(),
   working_directory: z.string().optional(),
   norun: z.boolean().optional(),
 });
 
 export type WindowDefinition =
-  // TODO: Base case should also allow an optional title for the window
   | z.infer<typeof baseWindowDefinition>
   | {
       leftside: WindowDefinition;
@@ -31,19 +30,34 @@ export type WindowDefinition =
 
 const windowSchema: z.ZodType<WindowDefinition> = z.union([
   baseWindowDefinition,
-  z.object({
+  z.strictObject({
     leftside: z.lazy(() => windowSchema),
     rightside: z.lazy(() => windowSchema),
   }),
-  z.object({
+  z.strictObject({
     upperside: z.lazy(() => windowSchema),
     lowerside: z.lazy(() => windowSchema),
   }),
 ]);
 
+// Top-level windows should allow an optional title
+const windowSchemaWithTitle = z.union([
+  baseWindowDefinition.extend({ title: z.string().optional() }),
+  z.strictObject({
+    title: z.string().optional(),
+    leftside: windowSchema,
+    rightside: windowSchema,
+  }),
+  z.strictObject({
+    title: z.string().optional(),
+    upperside: windowSchema,
+    lowerside: windowSchema,
+  }),
+]);
+
 export const configSechma = z.strictObject({
   env: envSchema.array(),
-  windows: windowSchema.and(z.object({ title: z.string().optional() })).array(),
+  windows: windowSchemaWithTitle.array(),
 });
 
 export type configDefinition = z.infer<typeof configSechma>;

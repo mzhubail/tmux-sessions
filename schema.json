@@ -15,7 +15,9 @@
                 "type": "string"
               }
             },
-            "required": ["name"],
+            "required": [
+              "name"
+            ],
             "additionalProperties": false
           },
           {
@@ -28,7 +30,9 @@
                 "type": "string"
               }
             },
-            "required": ["name"],
+            "required": [
+              "name"
+            ],
             "additionalProperties": false
           }
         ]
@@ -37,67 +41,125 @@
     "windows": {
       "type": "array",
       "items": {
-        "allOf": [
+        "anyOf": [
           {
-            "anyOf": [
-              {
-                "type": "object",
-                "properties": {
-                  "cmd": {
-                    "type": "string"
-                  },
-                  "working_directory": {
-                    "type": "string"
-                  },
-                  "norun": {
-                    "type": "boolean"
-                  }
-                },
-                "required": ["cmd"],
-                "additionalProperties": false
+            "type": "object",
+            "properties": {
+              "cmd": {
+                "type": "string"
               },
-              {
-                "type": "object",
-                "properties": {
-                  "leftside": {
-                    "$ref": "#/properties/windows/items/allOf/0"
-                  },
-                  "rightside": {
-                    "$ref": "#/properties/windows/items/allOf/0"
-                  }
-                },
-                "required": ["leftside", "rightside"],
-                "additionalProperties": false
+              "working_directory": {
+                "type": "string"
               },
-              {
-                "type": "object",
-                "properties": {
-                  "upperside": {
-                    "$ref": "#/properties/windows/items/allOf/0"
-                  },
-                  "lowerside": {
-                    "$ref": "#/properties/windows/items/allOf/0"
-                  }
-                },
-                "required": ["upperside", "lowerside"],
-                "additionalProperties": false
+              "norun": {
+                "type": "boolean"
+              },
+              "title": {
+                "type": "string"
               }
-            ]
+            },
+            "required": [
+              "cmd"
+            ],
+            "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "title": {
                 "type": "string"
+              },
+              "leftside": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "cmd": {
+                        "$ref": "#/properties/windows/items/anyOf/0/properties/cmd"
+                      },
+                      "working_directory": {
+                        "$ref": "#/properties/windows/items/anyOf/0/properties/working_directory"
+                      },
+                      "norun": {
+                        "$ref": "#/properties/windows/items/anyOf/0/properties/norun"
+                      }
+                    },
+                    "required": [
+                      "cmd"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "leftside": {
+                        "$ref": "#/properties/windows/items/anyOf/1/properties/leftside"
+                      },
+                      "rightside": {
+                        "$ref": "#/properties/windows/items/anyOf/1/properties/leftside"
+                      }
+                    },
+                    "required": [
+                      "leftside",
+                      "rightside"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "upperside": {
+                        "$ref": "#/properties/windows/items/anyOf/1/properties/leftside"
+                      },
+                      "lowerside": {
+                        "$ref": "#/properties/windows/items/anyOf/1/properties/leftside"
+                      }
+                    },
+                    "required": [
+                      "upperside",
+                      "lowerside"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "rightside": {
+                "$ref": "#/properties/windows/items/anyOf/1/properties/leftside"
               }
-            }
+            },
+            "required": [
+              "leftside",
+              "rightside"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "upperside": {
+                "$ref": "#/properties/windows/items/anyOf/1/properties/leftside"
+              },
+              "lowerside": {
+                "$ref": "#/properties/windows/items/anyOf/1/properties/leftside"
+              }
+            },
+            "required": [
+              "upperside",
+              "lowerside"
+            ],
+            "additionalProperties": false
           }
         ]
       }
     }
   },
-  "required": ["env", "windows"],
+  "required": [
+    "env",
+    "windows"
+  ],
   "additionalProperties": false,
   "$schema": "http://json-schema.org/draft-07/schema#"
 }
-
