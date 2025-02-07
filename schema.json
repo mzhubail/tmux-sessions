@@ -1,1 +1,103 @@
-{"type":"object","properties":{"env":{"type":"array","items":{"anyOf":[{"type":"object","properties":{"name":{"type":"string"},"default":{"type":"string"}},"required":["name"],"additionalProperties":false},{"type":"object","properties":{"name":{"type":"string"},"value":{"type":"string"}},"required":["name"],"additionalProperties":false}]}},"windows":{"type":"array","items":{"anyOf":[{"type":"object","properties":{"cmd":{"type":"string"},"working_directory":{"type":"string"},"norun":{"type":"boolean"}},"required":["cmd"],"additionalProperties":false},{"type":"object","properties":{"leftside":{"$ref":"#/properties/windows/items"},"rightside":{"$ref":"#/properties/windows/items"}},"required":["leftside","rightside"],"additionalProperties":false},{"type":"object","properties":{"upperside":{"$ref":"#/properties/windows/items"},"lowerside":{"$ref":"#/properties/windows/items"}},"required":["upperside","lowerside"],"additionalProperties":false}]}}},"required":["env","windows"],"additionalProperties":false,"$schema":"http://json-schema.org/draft-07/schema#"}
+{
+  "type": "object",
+  "properties": {
+    "env": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "default": {
+                "type": "string"
+              }
+            },
+            "required": ["name"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": ["name"],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "windows": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "cmd": {
+                    "type": "string"
+                  },
+                  "working_directory": {
+                    "type": "string"
+                  },
+                  "norun": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["cmd"],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "leftside": {
+                    "$ref": "#/properties/windows/items/allOf/0"
+                  },
+                  "rightside": {
+                    "$ref": "#/properties/windows/items/allOf/0"
+                  }
+                },
+                "required": ["leftside", "rightside"],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "upperside": {
+                    "$ref": "#/properties/windows/items/allOf/0"
+                  },
+                  "lowerside": {
+                    "$ref": "#/properties/windows/items/allOf/0"
+                  }
+                },
+                "required": ["upperside", "lowerside"],
+                "additionalProperties": false
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "required": ["env", "windows"],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
+

@@ -11,7 +11,7 @@ const envSchema = z.union([
   }),
 ]);
 
-const baseWindowDefinition = z.strictObject({
+const baseWindowDefinition = z.object({
   cmd: z.string(),
   working_directory: z.string().optional(),
   norun: z.boolean().optional(),
@@ -31,11 +31,11 @@ export type WindowDefinition =
 
 const windowSchema: z.ZodType<WindowDefinition> = z.union([
   baseWindowDefinition,
-  z.strictObject({
+  z.object({
     leftside: z.lazy(() => windowSchema),
     rightside: z.lazy(() => windowSchema),
   }),
-  z.strictObject({
+  z.object({
     upperside: z.lazy(() => windowSchema),
     lowerside: z.lazy(() => windowSchema),
   }),
@@ -43,7 +43,7 @@ const windowSchema: z.ZodType<WindowDefinition> = z.union([
 
 export const configSechma = z.strictObject({
   env: envSchema.array(),
-  windows: windowSchema.array(),
+  windows: windowSchema.and(z.object({ title: z.string().optional() })).array(),
 });
 
 export type configDefinition = z.infer<typeof configSechma>;

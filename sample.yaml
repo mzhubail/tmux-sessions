@@ -11,6 +11,7 @@ env:
 windows:
   - cmd: lg
   - cmd: npm run start
+    title: DEV
     working_directory: ../angularui
   - cmd: vim
     working_directory: ../angularui

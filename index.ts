@@ -24,15 +24,19 @@ function main() {
 
 async function handleConfig(config: configDefinition) {
   for (const w of config.windows) {
+    if (w.title) {
+      await runTmux(`new window with title "${w.title}"`);
+    } else {
+      await runTmux("new window");
+    }
+
     await handleConfigWindow(w);
   }
 }
 
 async function handleConfigWindow(w: WindowDefinition) {
   if ("cmd" in w) {
-    // TODO: Don't always create a new window
     // TODO: use actual tmux commands
-    await runTmux("new window");
 
     if (w.working_directory) {
       await runTmux(["cd", w.working_directory]);
