@@ -17,7 +17,8 @@ const baseWindowDefinition = z.strictObject({
   norun: z.boolean().optional(),
 });
 
-type WindowDefinition =
+export type WindowDefinition =
+  // TODO: Base case should also allow an optional title for the window
   | z.infer<typeof baseWindowDefinition>
   | {
       leftside: WindowDefinition;
@@ -44,3 +45,5 @@ export const configSechma = z.strictObject({
   env: envSchema.array(),
   windows: windowSchema.array(),
 });
+
+export type configDefinition = z.infer<typeof configSechma>;
