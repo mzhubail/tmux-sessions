@@ -15,16 +15,14 @@ windows:
     working_directory: ../angularui
   - cmd: helm upgrade --force mzh .
     norun: true
-  - split:
-      leftside:
-        cmd: echo hi
-        norun: true
-      rightside:
-        cmd: echo hello
-        working_directory: "~"
-
-database:
-  host: localhost
-  port: 3306
-  username: user
-  password: pass
+  - leftside:
+      cmd: echo hi
+      norun: true
+    rightside:
+      cmd: echo hello
+      working_directory: "~"
+# database:
+#   host: localhost
+#   port: 3306
+#   username: user
+#   password: pass
