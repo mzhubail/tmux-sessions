@@ -2,7 +2,7 @@
   "name": "tmux-sessions",
   "type": "module",
   "version": "0.0.1",
-  "description": "",
+  "description": "Create tmux sessions from a YAML file",
   "scripts": {
     "main": "tsx ./index.ts",
     "schema": "tsx ./src/generate-schema.ts"
