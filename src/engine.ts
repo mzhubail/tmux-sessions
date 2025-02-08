@@ -17,16 +17,17 @@ export async function handleConfig(config: configDefinition) {
 
 async function handleConfigWindow(w: WindowDefinition) {
   if ("cmd" in w) {
-    if (w.working_directory) {
+    const { cmd, working_directory, norun } = w;
+    if (working_directory) {
       // TODO: handle working directories using '-c'
-      await runTmux(["send-keys", "  cd", w.working_directory, "C-m"]);
+      await runTmux(["send-keys", "  cd", working_directory, "C-m"]);
     }
 
     // prettier-ignore
     await runTmux([
       "send-keys",
-      w.cmd,
-      w.norun ? undefined : "C-m"
+      cmd,
+      norun ? undefined : "C-m"
     ]);
   } else if ("leftside" in w) {
     const { leftside, rightside } = w;

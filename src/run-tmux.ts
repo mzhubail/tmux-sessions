@@ -6,14 +6,16 @@ export async function runTmux(args: (string | undefined)[] | string) {
     typeof args === "string" ? tokenizeArgs(args) : args
   ).filter((v): v is string => !!v);
 
-  const output = process.env.TEST
-    ? await x("echo", ["tmux", ...castedArgs])
-    : await x("tmux", castedArgs);
-
-  handleOutput(output);
+  await exec("echo", ["tmux", ...castedArgs]);
+  if (!process.env.TEST) {
+    await exec("tmux", castedArgs);
+  }
 }
 
-function handleOutput({ stdout, stderr }: Output) {
-  if (stdout) process.stdout.write(stdout);
-  if (stderr) process.stderr.write(stderr);
+async function exec(...args: Parameters<typeof x>): Promise<Output> {
+  const out = await x(...args);
+  if (out.stdout) process.stdout.write(out.stdout);
+  if (out.stderr) process.stderr.write(out.stderr);
+
+  return out;
 }
