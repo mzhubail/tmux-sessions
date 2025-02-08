@@ -2,11 +2,13 @@ import type { WindowDefinition, configDefinition } from "~/config-schema";
 import { runTmux } from "~/run-tmux";
 
 export async function handleConfig(config: configDefinition) {
+  // TODO: hande env
+
   for (const w of config.windows) {
     if (w.title) {
-      await runTmux(`new window with title "${w.title}"`);
+      await runTmux(["new-window", "-n", w.title]);
     } else {
-      await runTmux("new window");
+      await runTmux("new-window");
     }
 
     await handleConfigWindow(w);
@@ -15,23 +17,22 @@ export async function handleConfig(config: configDefinition) {
 
 async function handleConfigWindow(w: WindowDefinition) {
   if ("cmd" in w) {
-    // TODO: use actual tmux commands
-
     if (w.working_directory) {
-      await runTmux(["cd", w.working_directory]);
+      await runTmux(["send-keys", "  cd", w.working_directory, "<C-m>"]);
     }
 
-    if (!!w.norun) {
-      await runTmux(w.cmd + " <C-m>");
-    } else {
-      await runTmux(w.cmd);
-    }
+    // prettier-ignore
+    await runTmux([
+      "send-keys",
+      `  ${w.cmd}`,
+      w.norun ? undefined : "<C-m>"
+    ]);
   } else if ("leftside" in w) {
     const { leftside, rightside } = w;
 
     await handleConfigWindow(leftside);
 
-    await runTmux("create split and switch to rightside");
+    await runTmux(["split-window", "-h"]);
 
     await handleConfigWindow(rightside);
   } else if ("upperside" in w) {
@@ -39,7 +40,7 @@ async function handleConfigWindow(w: WindowDefinition) {
 
     await handleConfigWindow(upperside);
 
-    await runTmux("create split and switch to loweside");
+    await runTmux(["split-window", "-v"]);
 
     await handleConfigWindow(lowerside);
   }
