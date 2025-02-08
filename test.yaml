@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=./schema.json
+env: []
+
+windows:
+  - title: TEST
+    cmd: "  pnpm test"
+  - title: IDE
+    cmd: "  nvim"
+  - title: DEV
+    leftside:
+      cmd: "  pnpm dev"
+      norun: true
+    rightside:
+      upperside:
+        cmd: "  nvim .aws/credentials .env.local"
+        norun: true
+      lowerside:
+        cmd: "  docker restart some-container"
+        norun: true
+  - title: VMs
+    leftside:
+      cmd: "  docker compose up"
+      working_directory: .devcontainer
+    rightside:
+      cmd: "  docker logs -f some-container"
+  - title: N
+    cmd: "  nvim"
+    working_directory: notes-folder
+  - title: XX
+    cmd: "  nvim"
+    working_directory: path/to/repo
+# windows:
+#   - cmd: "  nvlazy"
+#     working_directory: ~/Repositories/A-star
+#   - cmd: "echo hi"
+#     norun: true
+#     working_directory: "~"
+#   - title: DEV
+#     leftside:
+#       cmd: "  pnpm dev"
+#       norun: true
+#     rightside:
+#       upperside:
+#         cmd: "  nvlazy .aws/credentials"
+#         norun: true
+#       lowerside:
+#         cmd: "  docker restart rex-aiserver"
+#         norun: true

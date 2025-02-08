@@ -2,7 +2,7 @@ import type { WindowDefinition, configDefinition } from "~/config-schema";
 import { runTmux } from "~/run-tmux";
 
 export async function handleConfig(config: configDefinition) {
-  // TODO: hande env
+  // TODO: hande env (don't need to for now :|)
 
   for (const w of config.windows) {
     if (w.title) {
@@ -18,14 +18,15 @@ export async function handleConfig(config: configDefinition) {
 async function handleConfigWindow(w: WindowDefinition) {
   if ("cmd" in w) {
     if (w.working_directory) {
-      await runTmux(["send-keys", "  cd", w.working_directory, "<C-m>"]);
+      // TODO: handle working directories using '-c'
+      await runTmux(["send-keys", "  cd", w.working_directory, "C-m"]);
     }
 
     // prettier-ignore
     await runTmux([
       "send-keys",
-      `  ${w.cmd}`,
-      w.norun ? undefined : "<C-m>"
+      w.cmd,
+      w.norun ? undefined : "C-m"
     ]);
   } else if ("leftside" in w) {
     const { leftside, rightside } = w;
