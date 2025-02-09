@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=./schema.json
+# yaml-language-server: $schema=../schema.json
 env: []
 
 windows:
@@ -29,6 +29,15 @@ windows:
   - title: XX
     cmd: "  nvim"
     working_directory: path/to/repo
+  - title: GIT
+    rightside:
+      cmd: "  git commit --no-verify"
+      working_directory: path/to/repo
+      norun: true
+    leftside:
+      cmd: "  git diff --staged --ignore-all-whitespace"
+      working_directory: path/to/repo
+      norun: true
 # windows:
 #   - cmd: "  nvlazy"
 #     working_directory: ~/Repositories/A-star
