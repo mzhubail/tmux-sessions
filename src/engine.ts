@@ -20,7 +20,10 @@ async function handleConfigWindow(w: WindowDefinition) {
     const { cmd, working_directory, norun } = w;
     if (working_directory) {
       // TODO: handle working directories using '-c'
-      await runTmux(["send-keys", "  cd", working_directory, "C-m"]);
+      // TODO: resolve path relative to file (or relative to cwd?)
+      // TODO: add a map for working directories
+      // TODO: top level working directories for splits with inheritance
+      await runTmux(["send-keys", "  cd ", working_directory, "C-m"]);
     }
 
     // prettier-ignore
