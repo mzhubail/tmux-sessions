@@ -1,7 +1,15 @@
+import { resolve } from "path";
 import type { WindowDefinition, configDefinition } from "~/config-schema";
 import { runTmux } from "~/run-tmux";
 
-export async function handleConfig(config: configDefinition) {
+type EngineContext = {
+  baseWorkingDirectory: string;
+};
+
+export async function handleConfig(
+  config: configDefinition,
+  ctx: EngineContext,
+) {
   // TODO: hande env (don't need to for now :|)
 
   for (const w of config.windows) {
@@ -11,19 +19,27 @@ export async function handleConfig(config: configDefinition) {
       await runTmux("new-window");
     }
 
-    await handleConfigWindow(w);
+    await handleConfigWindow(w, ctx);
   }
 }
 
-async function handleConfigWindow(w: WindowDefinition) {
+async function handleConfigWindow(
+  w: WindowDefinition,
+
+  ctx: EngineContext,
+) {
   if ("cmd" in w) {
     const { cmd, working_directory, norun } = w;
     if (working_directory) {
       // TODO: handle working directories using '-c'
-      // TODO: resolve path relative to file (or relative to cwd?)
       // TODO: add a map for working directories
       // TODO: top level working directories for splits with inheritance
-      await runTmux(["send-keys", "  cd ", working_directory, "C-m"]);
+      await runTmux([
+        "send-keys",
+        "  cd ",
+        resolve(ctx.baseWorkingDirectory, working_directory),
+        "C-m",
+      ]);
     }
 
     // prettier-ignore
@@ -35,18 +51,18 @@ async function handleConfigWindow(w: WindowDefinition) {
   } else if ("leftside" in w) {
     const { leftside, rightside } = w;
 
-    await handleConfigWindow(leftside);
+    await handleConfigWindow(leftside, ctx);
 
     await runTmux(["split-window", "-h"]);
 
-    await handleConfigWindow(rightside);
+    await handleConfigWindow(rightside, ctx);
   } else if ("upperside" in w) {
     const { upperside, lowerside } = w;
 
-    await handleConfigWindow(upperside);
+    await handleConfigWindow(upperside, ctx);
 
     await runTmux(["split-window", "-v"]);
 
-    await handleConfigWindow(lowerside);
+    await handleConfigWindow(lowerside, ctx);
   }
 }
