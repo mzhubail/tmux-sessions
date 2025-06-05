@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=../schema.json
+env: []
+
+windows:
+  - title: IDE
+    cmd: "  nvim"
+    working_directory: &vitest_dir ../../vitest
+  - title: DEV
+    leftside:
+      cmd: "  pnpm dev"
+      norun: true
+      working_directory: *vitest_dir
+    rightside:
+      cmd: "  pnpm vitest"
+      norun: true
+      working_directory: &example_dir ../../vitest-examples/first-vitest-app/
+  - title: DEV
+    cmd: "  nvim"
+    working_directory: *example_dir

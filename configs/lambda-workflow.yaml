@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=../schema.json
+env: []
+
+windows:
+  - title: IDE
+    cmd: "  nvim"
+    working_directory: ../../rex-array-backend/
+  - title: IMG
+    leftside:
+      cmd: "  docker build -t ... . -n tl"
+      norun: true
+      working_directory: &function_dir ../../rex-array-backend/infra/cdk/functions/
+    rightside:
+      upperside:
+        cmd: "  docker run ..."
+        norun: true
+        working_directory: *function_dir
+      lowerside:
+        cmd: "  curl"
+        norun: true
+        working_directory: *function_dir
+  - title: IMG
+    cmd: " docker exec -it ..."
+    norun: true
+    working_directory: *function_dir
+
+  - title: DEPLOY
+    working_directory: &cdk_dir ../../rex-array-backend/infra/cdk/functions/
+    cmd: "  AWS_REGION=me-south-1 pnpm cdk deploy -e ..."
+    norun: true
+
+  - title: INVOKE
+    working_directory: *cdk_dir
+    cmd: "   aws lambda invoke --region me-south-1 --function-name spectrum-migration-runner-spectrummigrationrunnerd-7tvuaaSpJ0HJ /dev/stdout | jq"
+    norun: true
+
+    # docker run --platform linux/amd64 -p 9000:8080 docker-image:test
+    # aws lambda invoke --region me-south-1 --function-name spectrum-migration-runner-spectrummigrationrunnerd-7tvuaaSpJ0HJ /dev/stdout --log-type Tail |  jq 'if . != null then { StatusCode: del(.LogResult) }, (.LogResult | @base64d) else . end' -r

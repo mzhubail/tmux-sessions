@@ -4,39 +4,58 @@ env: []
 windows:
   - title: TEST
     cmd: "  pnpm test"
+    working_directory: &fe ../../rex-frontend
+
+  # - title: IDE
+  #   cmd: "  nvim"
+  #   working_directory: *fe
+
   - title: IDE
-    cmd: "  nvim"
+    leftside:
+      cmd: "  nvim"
+      working_directory: *fe
+    rightside:
+      cmd: "  pnpm exec tsc --watch"
+      working_directory: *fe
+
   - title: DEV
     leftside:
       cmd: "  pnpm dev"
-      norun: true
+      working_directory: *fe
     rightside:
       upperside:
         cmd: "  nvim .aws/credentials .env.local"
-        norun: true
+        working_directory: *fe
       lowerside:
-        cmd: "  docker restart some-container"
+        cmd: "  docker restart rex-aiserver"
+        working_directory: *fe
         norun: true
+
   - title: VMs
     leftside:
       cmd: "  docker compose up"
-      working_directory: .devcontainer
+      working_directory: &vm ../../rex-frontend/.devcontainer
     rightside:
-      cmd: "  docker logs -f some-container"
+      cmd: "  docker logs -f rex-aiserver"
+      working_directory: *vm
+      norun: true
+
   - title: N
     cmd: "  nvim"
-    working_directory: notes-folder
-  - title: XX
+    working_directory: ../mzh-notes/
+
+  - title: AI
     cmd: "  nvim"
-    working_directory: path/to/repo
+    working_directory: ../rex-ai
+
   - title: GIT
     rightside:
       cmd: "  git commit --no-verify"
-      working_directory: path/to/repo
+      working_directory: *fe
       norun: true
     leftside:
-      cmd: "  git diff --staged --ignore-all-whitespace"
-      working_directory: path/to/repo
+      cmd: "  git diff --staged --ignore-all-space | delta"
+      working_directory: *fe
       norun: true
 # windows:
 #   - cmd: "  nvlazy"

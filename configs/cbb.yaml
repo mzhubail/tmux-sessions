@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../schema.json
+env: []
+
+windows:
+  - title: IDE
+    leftside:
+      cmd: "  nvim"
+      working_directory: &fe ../../chat-bot-frontend-client/
+    rightside:
+      cmd: "  pnpm exec tsc --watch --noEmit"
+      working_directory: *fe
+
+  - title: DEV
+    # leftside:
+    cmd: "  pnpm dev"
+    working_directory: *fe
+    norun: true
+    # rightside:
+    #   cmd: "  tools/generate-tree-helper ~/Repositories/open-search-data-loader/initial-tree-v0_2_5.json"
+    #   working_directory: *fe
+    #   norun: true
+
+  # - title: TREE
+  #   leftside:
+  #     cmd: "  nvim data-loader.py"
+  #     working_directory: &dl ../../open-search-data-loader/
+  #   rightside:
+  #     cmd: "  python data-loader.py data/ | jq -C | less -R"
+  #     working_directory: *dl
+  #     norun: true
+
+  # - title: T
+  #   leftside:
+  #     cmd: "  nvim data/"
+  #     working_directory: *dl
+  #     norun: true
+  #   rightside:
+  #     upperside:
+  #       cmd: |
+  #         < data/full-database-v0_3.json jq \
+  #         '.hits.hits.[]._source.chapter_code' | sort -V | uniq -c
+  #       norun: true
+  #       working_directory: *dl
+  #     lowerside:
+  #       cmd: python data-loader.py data/ > initial-tree-v0_2_5.json
+  #       norun: true
