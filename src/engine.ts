@@ -12,6 +12,8 @@ export async function handleConfig(
 ) {
   // TODO: hande env (don't need to for now :|)
 
+  // TODO: validate existence of all paths before running
+
   for (const w of config.windows) {
     if (w.title) {
       await runTmux(["new-window", "-n", w.title]);
