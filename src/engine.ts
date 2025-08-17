@@ -1,8 +1,9 @@
 import { resolve } from "path";
 import type { WindowDefinition, configDefinition } from "~/config-schema";
 import { runTmux } from "~/run-tmux";
+import { validatePaths } from "./validate-paths";
 
-type EngineContext = {
+export type EngineContext = {
   baseWorkingDirectory: string;
 };
 
@@ -12,7 +13,9 @@ export async function handleConfig(
 ) {
   // TODO: hande env (don't need to for now :|)
 
-  // TODO: validate existence of all paths before running
+  if (await validatePaths(config, ctx)) {
+    return;
+  }
 
   for (const w of config.windows) {
     if (w.title) {
