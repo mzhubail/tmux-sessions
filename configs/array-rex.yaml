@@ -5,7 +5,7 @@ windows:
   - title: IDE
     leftside:
       cmd: "  nvim"
-      working_directory: &fe ../../rex-array-frontend/
+      working_directory: &fe ../../spectrum-frontend/
     rightside:
       cmd: "  pnpm exec tsc --watch --noEmit --noErrorTruncation"
       norun: true
@@ -23,30 +23,34 @@ windows:
 
   - title: PY
     cmd: "  nvim"
-    working_directory: &server ../../rex-array-backend/
+    working_directory: &server ../../spectrum-backend/
 
-  - title: PY
+  - title: DEV
     rightside:
       cmd: "  uv run uvicorn src.ats.main:app --reload"
       working_directory: *server
       norun: true
     leftside:
-      cmd: "  docker compose up db"
-      working_directory: ../../rex-array-backend/.devcontainer/
+      cmd: "  uv run pyliquibase"
+      working_directory: *server
       norun: true
 
-  - title: GIT
-    rightside:
-      cmd: "  git commit --no-verify"
-      working_directory: *fe
-      norun: true
-    leftside:
-      cmd: "  git diff --staged --ignore-all-space | delta"
-      working_directory: *fe
-      norun: true
+  # - title: GIT
+  #   rightside:
+  #     cmd: "  git commit --no-verify"
+  #     working_directory: *fe
+  #     norun: true
+  #   leftside:
+  #     cmd: "  git diff --staged --ignore-all-space | delta"
+  #     working_directory: *fe
+  #     norun: true
+
+  - title: INFRA
+    cmd: "  nvim"
+    working_directory: ../../spectrum-infra/
 
   - title: DEPLOY
-    working_directory: &cdk_dir ../../rex-array-backend/infra/cdk/functions/
+    working_directory: &cdk_dir ../../spectrum-backend/infra/cdk/functions/
     cmd: "  AWS_REGION=me-south-1 pnpm cdk deploy -e ..."
     norun: true
 

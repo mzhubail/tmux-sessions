@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=./schema.json
+# yaml-language-server: $schema=../schema.json
 env:
   - name: KUBECONFIG
     default: /home/mzh/just-for-now/trading-app/kubeconfig.yaml
