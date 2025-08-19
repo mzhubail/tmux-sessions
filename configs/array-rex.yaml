@@ -50,7 +50,7 @@ windows:
     working_directory: ../../spectrum-infra/
 
   - title: DEPLOY
-    working_directory: &cdk_dir ../../spectrum-backend/infra/cdk/functions/
+    working_directory: &cdk_dir ../../spectrum-infra/cdk/
     cmd: "  AWS_REGION=me-south-1 pnpm cdk deploy -e ..."
     norun: true
 
