@@ -1,0 +1,126 @@
+# yaml-language-server: $schema=../schema.json
+env: []
+
+windows:
+  - title: IDE
+    leftside:
+      cmd: "  nvim"
+      working_directory: &backend ../../pegasus-backend/
+    rightside:
+      cmd: "  pnpm exec tsc --watch --noEmit --noErrorTruncation"
+      norun: true
+      working_directory: *backend
+
+  - title: DEV
+    leftside:
+      upperside:
+        cmd: |
+          JWT_SECRET_KEY="-----BEGIN OPENSSH PRIVATE KEY-----
+          b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+          QyNTUxOQAAACAS5tXo9OsTlkxLcruecGOtFXkhCTd+M4sxVNxWkDnz8QAAAKAnC0q/JwtK
+          vwAAAAtzc2gtZWQyNTUxOQAAACAS5tXo9OsTlkxLcruecGOtFXkhCTd+M4sxVNxWkDnz8Q
+          AAAECCEz7n9Igu0K10xGfPDFEM74vBKZhDBi/KswlewYwxjBLm1ej06xOWTEtyu55wY60V
+          eSEJN34zizFU3FaQOfPxAAAAFnlvdXJfZW1haWxAZXhhbXBsZS5jb20BAgMEBQYH
+          -----END OPENSSH PRIVATE KEY-----" \
+            JWT_REFRESH_SECRET_KEY="-----BEGIN OPENSSH PRIVATE KEY-----
+          b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+          QyNTUxOQAAACAS5tXo9OsTlkxLcruecGOtFXkhCTd+M4sxVNxWkDnz8QAAAKAnC0q/JwtK
+          vwAAAAtzc2gtZWQyNTUxOQAAACAS5tXo9OsTlkxLcruecGOtFXkhCTd+M4sxVNxWkDnz8Q
+          AAAECCEz7n9Igu0K10xGfPDFEM74vBKZhDBi/KswlewYwxjBLm1ej06xOWTEtyu55wY60V
+          eSEJN34zizFU3FaQOfPxAAAAFnlvdXJfZW1haWxAZXhhbXBsZS5jb20BAgMEBQYH
+          -----END OPENSSH PRIVATE KEY-----" \
+            SITE_TITLE=PEGASUS MAIL_FROM=test@pegasus.array.world \
+            USERPORT=9001 npm run start
+        norun: true
+        working_directory: ../../pegasus-backend/user-service/
+
+      lowerside:
+        cmd: |
+          ADMINPORT=9002 npm run start
+        norun: true
+        working_directory: ../../pegasus-backend/admin-service/
+
+    rightside:
+      cmd: |
+        npm run
+      norun: true
+      working_directory: ../../pegasus-backend/common/
+
+  - title: TEST
+    cmd: "  nvim main.http notes.md"
+    working_directory: &api ../../pegasus-api-testing/
+
+  - title: INFRA
+    rightside:
+      cmd: "  uv run uvicorn src.ats.main:app --reload"
+      working_directory: &infra ../../pegasus-infra/
+      norun: true
+    leftside:
+      cmd: "  AWS_REGION=me-south-1 pnpm cdk deploy -e ..."
+      working_directory: *infra
+      norun: true
+
+  - title: DB
+    cmd: |
+      sudo -u postgres psql
+    norun: true
+    working_directory: ../../pegasus-backend/
+
+  - title: ADM
+    leftside:
+      cmd: |
+        nvim
+      working_directory: &admin-portal ../../pegasus-admin-portal/
+    rightside:
+      cmd: |
+        npm exec vite
+      working_directory: *admin-portal
+
+  # - title: GIT
+  #   rightside:
+  #     cmd: "  git commit --no-verify"
+  #     working_directory: *fe
+  #     norun: true
+  #   leftside:
+  #     cmd: "  git diff --staged --ignore-all-space | delta"
+  #     working_directory: *fe
+  #     norun: true
+
+  # - title: INFRA
+  #   cmd: "  nvim"
+  #   working_directory: ../../spectrum-infra/
+  #
+  # - title: DEPLOY
+  #   working_directory: &cdk_dir ../../spectrum-infra/cdk/
+  #   cmd: "  AWS_REGION=me-south-1 pnpm cdk deploy -e ..."
+  #   norun: true
+  #
+  # - title: INVOKE
+  #   working_directory: *cdk_dir
+  #   cmd: "   aws lambda invoke --region me-south-1 --function-name spectrum-migration-runner-spectrummigrationrunnerd-7tvuaaSpJ0HJ /dev/stdout | jq"
+  #   norun: true
+
+  # - title: TREE
+  #   leftside:
+  #     cmd: "  nvim data-loader.py"
+  #     working_directory: &dl ../../open-search-data-loader/
+  #   rightside:
+  #     cmd: "  python data-loader.py data/ | jq -C | less -R"
+  #     working_directory: *dl
+  #     norun: true
+
+  # - title: T
+  #   leftside:
+  #     cmd: "  nvim data/"
+  #     working_directory: *dl
+  #     norun: true
+  #   rightside:
+  #     upperside:
+  #       cmd: |
+  #         < data/full-database-v0_3.json jq \
+  #         '.hits.hits.[]._source.chapter_code' | sort -V | uniq -c
+  #       norun: true
+  #       working_directory: *dl
+  #     lowerside:
+  #       cmd: python data-loader.py data/ > initial-tree-v0_2_5.json
+  #       norun: true
