@@ -3,78 +3,80 @@ env: []
 
 windows:
   - title: IDE
+    working_directory: &backend ../../pegasus-backend/
     leftside:
       cmd: "  nvim"
-      working_directory: &backend ../../pegasus-backend/
     rightside:
       cmd: "  pnpm exec tsc --watch --noEmit --noErrorTruncation"
       norun: true
-      working_directory: *backend
 
   - title: DEV
     leftside:
       upperside:
-        cmd: |
-          JWT_SECRET_KEY="-----BEGIN OPENSSH PRIVATE KEY-----
-          b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
-          QyNTUxOQAAACAS5tXo9OsTlkxLcruecGOtFXkhCTd+M4sxVNxWkDnz8QAAAKAnC0q/JwtK
-          vwAAAAtzc2gtZWQyNTUxOQAAACAS5tXo9OsTlkxLcruecGOtFXkhCTd+M4sxVNxWkDnz8Q
-          AAAECCEz7n9Igu0K10xGfPDFEM74vBKZhDBi/KswlewYwxjBLm1ej06xOWTEtyu55wY60V
-          eSEJN34zizFU3FaQOfPxAAAAFnlvdXJfZW1haWxAZXhhbXBsZS5jb20BAgMEBQYH
-          -----END OPENSSH PRIVATE KEY-----" \
-            JWT_REFRESH_SECRET_KEY="-----BEGIN OPENSSH PRIVATE KEY-----
-          b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
-          QyNTUxOQAAACAS5tXo9OsTlkxLcruecGOtFXkhCTd+M4sxVNxWkDnz8QAAAKAnC0q/JwtK
-          vwAAAAtzc2gtZWQyNTUxOQAAACAS5tXo9OsTlkxLcruecGOtFXkhCTd+M4sxVNxWkDnz8Q
-          AAAECCEz7n9Igu0K10xGfPDFEM74vBKZhDBi/KswlewYwxjBLm1ej06xOWTEtyu55wY60V
-          eSEJN34zizFU3FaQOfPxAAAAFnlvdXJfZW1haWxAZXhhbXBsZS5jb20BAgMEBQYH
-          -----END OPENSSH PRIVATE KEY-----" \
-            SITE_TITLE=PEGASUS MAIL_FROM=test@pegasus.array.world \
-            USERPORT=9001 npm run start
+        cmd: pnpm run start
+
         norun: true
         working_directory: ../../pegasus-backend/user-service/
 
       lowerside:
-        cmd: |
-          ADMINPORT=9002 npm run start
+        cmd: pnpm run start
+
         norun: true
         working_directory: ../../pegasus-backend/admin-service/
 
     rightside:
       cmd: |
-        npm run
-      norun: true
+        pnpm run
       working_directory: ../../pegasus-backend/common/
 
   - title: TEST
-    cmd: "  nvim main.http notes.md"
+    cmd: "  nvim"
     working_directory: &api ../../pegasus-api-testing/
 
   - title: INFRA
-    rightside:
-      cmd: "  uv run uvicorn src.ats.main:app --reload"
-      working_directory: &infra ../../pegasus-infra/
-      norun: true
+    working_directory: &infra ../../pegasus-infra/
     leftside:
-      cmd: "  AWS_REGION=me-south-1 pnpm cdk deploy -e ..."
-      working_directory: *infra
+      cmd: nvim
+    rightside:
+      cmd: |
+        AWS_REGION=me-south-1 pnpm cdk:dev deploy --all --concurrency=10 --require-approval=never
       norun: true
 
   - title: DB
-    cmd: |
-      sudo -u postgres psql
-    norun: true
-    working_directory: ../../pegasus-backend/
+    leftside:
+      cmd: |
+        sh ssh-into-instance.sh
+
+      norun: true
+      working_directory: ../../pegasus-backend/scripts/
+
+    rightside:
+      cmd: |
+        PGPASSWORD=UMdnE9UZyaEwJ8e6kVDD psql -p 54320 -h localhost -U postgres
+
+      norun: true
+      working_directory: *backend
 
   - title: ADM
+    working_directory: &admin-service ../../pegasus-admin-portal/
     leftside:
       cmd: |
         nvim
-      working_directory: &admin-portal ../../pegasus-admin-portal/
     rightside:
       cmd: |
-        npm exec vite
-      working_directory: *admin-portal
+        pnpm exec vite -- --port=5174
+
+  - title: MOCK
+    working_directory: &mock-service ../../pegasus-backend/external-service-mock/
+    leftside:
+      cmd: |
+        nvim
+    rightside:
+      upperside:
+        cmd: pnpm run start
+
+      lowerside:
+        cmd: curl localhost:8080/api/third-party/season-cal/2025-09-24/2025-09-24 -v | jq | head -n 80
 
   # - title: GIT
   #   rightside:
