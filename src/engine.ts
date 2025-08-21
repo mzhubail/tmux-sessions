@@ -50,7 +50,7 @@ async function handleConfigWindow(
     // prettier-ignore
     await runTmux([
       "send-keys",
-      cmd,
+      ` ${cmd}`,
       norun ? undefined : "C-m"
     ]);
   } else if ("leftside" in w) {
