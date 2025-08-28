@@ -58,7 +58,7 @@ async function handleConfigWindow(
 
     await handleConfigWindow(leftside, ctx);
 
-    await runTmux(["split-window", "-h"]);
+    await runTmux(["split-window", "-h", "-f"]);
 
     await handleConfigWindow(rightside, ctx);
   } else if ("upperside" in w) {
@@ -66,7 +66,7 @@ async function handleConfigWindow(
 
     await handleConfigWindow(upperside, ctx);
 
-    await runTmux(["split-window", "-v"]);
+    await runTmux(["split-window", "-v", "-f"]);
 
     await handleConfigWindow(lowerside, ctx);
   }
