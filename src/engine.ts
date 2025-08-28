@@ -56,17 +56,23 @@ async function handleConfigWindow(
   } else if ("leftside" in w) {
     const { leftside, rightside } = w;
 
+    await runTmux(["split-window", "-bh"]);
+
     await handleConfigWindow(leftside, ctx);
 
-    await runTmux(["split-window", "-h", "-f"]);
+    // advance to next pane
+    await runTmux(["select-pane", "-t+"]);
 
     await handleConfigWindow(rightside, ctx);
   } else if ("upperside" in w) {
     const { upperside, lowerside } = w;
 
+    await runTmux(["split-window", "-bv"]);
+
     await handleConfigWindow(upperside, ctx);
 
-    await runTmux(["split-window", "-v", "-f"]);
+    // advance to next pane
+    await runTmux(["select-pane", "-t+"]);
 
     await handleConfigWindow(lowerside, ctx);
   }
