@@ -22,10 +22,12 @@ export type WindowDefinition =
   | {
       leftside: WindowDefinition;
       rightside: WindowDefinition;
+      working_directory?: string;
     }
   | {
       upperside: WindowDefinition;
       lowerside: WindowDefinition;
+      working_directory?: string;
     };
 
 const windowSchema: z.ZodType<WindowDefinition> = z.union([
@@ -33,10 +35,12 @@ const windowSchema: z.ZodType<WindowDefinition> = z.union([
   z.strictObject({
     leftside: z.lazy(() => windowSchema),
     rightside: z.lazy(() => windowSchema),
+    working_directory: z.string().optional(),
   }),
   z.strictObject({
     upperside: z.lazy(() => windowSchema),
     lowerside: z.lazy(() => windowSchema),
+    working_directory: z.string().optional(),
   }),
 ]);
 
@@ -47,11 +51,13 @@ const windowSchemaWithTitle = z.union([
     title: z.string().optional(),
     leftside: windowSchema,
     rightside: windowSchema,
+    working_directory: z.string().optional(),
   }),
   z.strictObject({
     title: z.string().optional(),
     upperside: windowSchema,
     lowerside: windowSchema,
+    working_directory: z.string().optional(),
   }),
 ]);
 

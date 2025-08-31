@@ -24,25 +24,27 @@ export async function handleConfig(
       await runTmux("new-window");
     }
 
-    await handleConfigWindow(w, ctx);
+    await handleConfigWindow(w, ctx, w.working_directory);
   }
 }
 
 async function handleConfigWindow(
   w: WindowDefinition,
-
   ctx: EngineContext,
+  working_directory?: string,
 ) {
+  const wd = w.working_directory || working_directory;
+  console.log(`  >>  ${wd}`);
+
   if ("cmd" in w) {
-    const { cmd, working_directory, norun } = w;
-    if (working_directory) {
+    const { cmd, norun } = w;
+    if (wd) {
       // TODO: handle working directories using '-c'
       // TODO: add a map for working directories
-      // TODO: top level working directories for splits with inheritance
       await runTmux([
         "send-keys",
         "  cd ",
-        resolve(ctx.baseWorkingDirectory, working_directory),
+        resolve(ctx.baseWorkingDirectory, wd ?? ""),
         "C-m",
       ]);
     }
@@ -58,22 +60,22 @@ async function handleConfigWindow(
 
     await runTmux(["split-window", "-bh"]);
 
-    await handleConfigWindow(leftside, ctx);
+    await handleConfigWindow(leftside, ctx, wd);
 
     // advance to next pane
     await runTmux(["select-pane", "-t+"]);
 
-    await handleConfigWindow(rightside, ctx);
+    await handleConfigWindow(rightside, ctx, wd);
   } else if ("upperside" in w) {
     const { upperside, lowerside } = w;
 
     await runTmux(["split-window", "-bv"]);
 
-    await handleConfigWindow(upperside, ctx);
+    await handleConfigWindow(upperside, ctx, wd);
 
     // advance to next pane
     await runTmux(["select-pane", "-t+"]);
 
-    await handleConfigWindow(lowerside, ctx);
+    await handleConfigWindow(lowerside, ctx, wd);
   }
 }
