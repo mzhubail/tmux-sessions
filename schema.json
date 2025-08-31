@@ -97,6 +97,9 @@
                       },
                       "rightside": {
                         "$ref": "#/properties/windows/items/anyOf/1/properties/leftside"
+                      },
+                      "working_directory": {
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -113,6 +116,9 @@
                       },
                       "lowerside": {
                         "$ref": "#/properties/windows/items/anyOf/1/properties/leftside"
+                      },
+                      "working_directory": {
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -125,6 +131,9 @@
               },
               "rightside": {
                 "$ref": "#/properties/windows/items/anyOf/1/properties/leftside"
+              },
+              "working_directory": {
+                "type": "string"
               }
             },
             "required": [
@@ -144,6 +153,9 @@
               },
               "lowerside": {
                 "$ref": "#/properties/windows/items/anyOf/1/properties/leftside"
+              },
+              "working_directory": {
+                "type": "string"
               }
             },
             "required": [
