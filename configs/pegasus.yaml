@@ -68,6 +68,20 @@ windows:
         npm exec vite -- --port=5174
       working_directory: *admin-portal
 
+  - title: MOCK
+    leftside:
+      cmd: |
+        nvim
+      working_directory: &mock-service ../../pegasus-backend/external-service-mock/
+    rightside:
+      upperside:
+        cmd: pnpm run start
+        working_directory: *mock-service
+
+      lowerside:
+        cmd: curl localhost:8080/api/third-party/season-cal/2025-09-24/2025-09-24 -v | jq | head -n 80
+        working_directory: *mock-service
+
   # - title: GIT
   #   rightside:
   #     cmd: "  git commit --no-verify"
