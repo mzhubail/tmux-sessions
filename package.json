@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "description": "Create tmux sessions from a YAML file",
   "scripts": {
-    "main": "tsx ./index.ts",
-    "schema": "tsx ./src/generate-schema.ts"
+    "compile": "bun build --compile index.ts --outfile ~/.local/bin/tmux-sessions",
+    "gen-schema": "tsx ./src/generate-schema.ts"
   },
   "keywords": [],
   "author": "mzhubail",
